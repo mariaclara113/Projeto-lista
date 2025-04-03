@@ -1,52 +1,48 @@
-# Prerequisites
-*.d
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
+#define MAX 60
 
-# Linker output
-*.ilk
-*.map
-*.exp
+// Estrutura do nó da lista encadeada de disciplinas
+typedef struct No {
+    char nome[50];
+    struct No* prox;
+} No;
 
-# Precompiled Headers
-*.gch
-*.pch
+// Função para adicionar disciplina a um aluno
+void adicionarDisciplina(No** lista, char nome[]) {
+    No* novo = (No*)malloc(sizeof(No));
+    if (!novo) {
+        printf("Erro ao alocar memória para disciplina.\n");
+        return;
+    }
+    strcpy(novo->nome, nome);
+    novo->prox = *lista;  // Insere no início da lista
+    *lista = novo;
+}
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
+// Função para listar disciplinas de um aluno
+void listarDisciplinas(No* lista) {
+    if (lista == NULL) {
+        printf("Nenhuma disciplina cadastrada.\n");
+        return;
+    }
+    printf("Disciplinas: ");
+    while (lista != NULL) {
+        printf("%s, ", lista->nome);
+        lista = lista->prox;
+    }
+    printf("\n");
+}
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
-
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
-
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
+// Função para liberar memória das disciplinas
+void liberarDisciplinas(No** lista) {
+    No* atual = *lista;
+    while (atual != NULL) {
+        No* temp = atual;
+        atual = atual->prox;
+        free(temp);
+    }
+    *lista = NULL;
+}
